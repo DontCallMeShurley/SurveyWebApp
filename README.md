@@ -1,91 +1,108 @@
-# SurveyWebApp
-Задача состоит в разработке модуля для создания опроса, анализа полученных результатов и создание авторизации на платформе MVC .NET6. на основе имеющегося репозитория.
+# Survey App
 
-Концепция приложения состоит в проведении анализа качества преподавания на основе оценок студентов. Войдя в личный кабинет, студент проходит опрос по предметам, которые были у него в течение семестра.
+Users of this app are divided into two distinct roles, each having different
+requirements:
 
-Функциональные требования:
+-   _Survey Coordinators_ define and conduct surveys. This is an administrative
+    function not available to normal users.
+-   _Survey Respondents_ Complete surveys. They have no
+    administrative privileges within the app.
 
-1)Анкетирование
+## Tech Stack
+-   ASP.NET Core 3.1
+-   Entity Framework 3.1.6
+-   ASP.NET Core Identity
+-   SQL Server
+-   Humanizer 2.8.26
+-   Bootstrap 4.3.1
+-   jQuery
+-   clipboard.js
+-   Chart.js
 
-Доработать страницу, выводящую список опросов. Сделать возможность поиска и фильтрации данных по столбцам таблицы. Добавить вывод количества вопросов в опросах.
+## User Stories
 
-Создать страницу, которая позволяет просмотреть выбранный опрос и пройти его.
+### General
 
-Создать страницу для создания опроса. При создании указывать (описание, дату начала, дату окончания, статус, преподаватель- предмет). Должна быть осуществлена проверка вводимых значений.
+-   [X] Survey Coordinators can define, conduct, and view surveys and survey results.
+-   [X] Survey Coordinators can login to the app to access functions, like defining a survey.
+-   [X] Survey Respondents can answer a survey as a guest.
 
-Создать страницу для редактирования содержания опроса.
+### Defining a Survey
 
-При переходе на нее будет выводится общая информация об опросе (Название, описание, дата начала и окончания, статус, преподаватель и предмет, который он ведет). Список вопросов, которые содержит данный опрос, их варианты ответов. Возможность добавлять новый вопрос с указанием текста самого вопроса, типа ответа (выбор одного варианта из списка, выбор нескольких вариантов, текстовый ответ) и при необходимости самих вариантов ответа. Также их редактирования. (Проверка вводимых значений).
+-   [X] Survey Coordinator can define a survey containing 1-15 multiple choice questions.
+-   [X] Survey Coordinator can define 1-10 mutually exclusive selections to each question.
+-   [X] Survey Coordinator can enter a title for the survey.
+-   [X] Survey Coordinator can click a 'Cancel' button to return to the home page without saving the survey.
+-   [X] Survey Coordinator can click a 'Save' button save a survey.
+-   [X] After saving the survey, a link for the survey should be created. (/survey/answer/`{id}`)
 
-В форме для прохождения опроса должна осуществляться проверка вводимых значений.
+### Answering a Survey
+-   [X] Survey Respondents should see the title of the survey and the questions below the title.
+-   [X] Survey Respondent can select responses to survey questions by clicking on a checkbox
+-   [X] Survey Respondents can click a 'Submit' button submit their responses to the survey.
+-   [X] Survey Respondents can click a 'Cancel' button to return to the home page without submitting the survey.
 
-(Можно сделать один фиксированный набор вопросов, который будет использоваться за основу для составления опроса и составления статистики. Привязывать его к преподавателям-предметам)
+### Conducting a Survey
 
-Пример анкеты:
+-   [X] Survey Coordinator can open a survey by selecting a survey from a list of previously defined surveys
+-   [X] Survey Coordinators can close a survey by selecting it from a list of open surveys
 
-Программирование – Иванов И И
+### Viewing Survey Results
 
-Оцените (по 5 бальной шкале):
+-   [X] Survey Coordinators can select the survey to display from a list surveys
+-   [X] Survey Coordinators can view survey results as in a pie chart showing the number of responses for each of the possible selections to the questions.
 
-1) Полезность курса для вашей карьеры
+## Bonus features
 
-2) Новизна полученных знаний
+-   [X] Survey Respondents cannot complete the same survey more than once (maybe save the **e-mail** or ~~IP address~~ of the respondent)
+-   [X] Survey Coordinators and Survey Respondents can view graphical representations of survey results (e.g. pie, bar, column, etc. charts)
 
-3) Сложность пройденного курса
+## TODO
 
-Оцените интенсивность своего участия в форматах освоенного материала(0-20%, 21-40%, 41-60%, 81-100%):
+-   [ ] Display if any form validation errors.
 
-1) Лекции
+## Screenshots
 
-2) Семинары
+### Home Page
 
-Что бы вы изменили в содержании и организации курса:
+![Home Page](/screenshots/s_home_page.png)
 
-Текстовый ответ
+### Login Page
 
-(Далее такие же вопросы, но для другого предмета и преподавателя)
+![Login Page](/screenshots/s_login_page.png)
 
-2) Анализ результатов анкетирования
+### Surveys Page
 
-Создать страницу с результатами прохождения опроса.
+![Surveys Page](/screenshots/s_surveys.png)
 
-Должна выводиться статистика о прохождении опросов. Список групп и количество студентов, прошедших анкетирование.
+### Share Survey Modal
 
-Результаты прохождения опросов.
+![Share Survey Modal](/screenshots/s_share_survey.png)
 
-Возможность просматривать текстовые ответы студентов.
+### Create Survey Modal
 
+![Create Survey Modal](/screenshots/s_create_survey_modal.png)
 
-Общий рейтинг предметов и преподавателей по совокупной оценке( по 5-и бальной шкале.) (Среднее значение по всем критериям, которые были в опросе)
+### Create Survey Page
 
-При нажатии на выбранный, должна открываться страница с более подробной статистикой по разным критериям (средняя оценка).
+![Create Survey Page](/screenshots/s_create_survey.png)
 
-Качество лекций – средний набранный балл, качество семинаров – средний набранный балл и т д.
+### Answer Survey Page
 
-(Пример критериев: Качество лекций, семинаров, уровень преподавания, актуальность предмета и т д.) для оценки выбранного предмета/ преподавателя.
+![Answer Survey Page](/screenshots/s_answer_survey.png)
 
-Выводиться график 360 по средней оценке по всем критериям.
+### Survey Details Page
 
-Реализация возможности фильтрации по кафедрам, общий список преподавателей / предметов
+![Survey Details Page](/screenshots/s_survey_details_1.png)
 
+![Survey Details Page](/screenshots/s_survey_details_2.png)
 
-3)Авторизация, разграничение прав доступа
+---
 
-Реализовать разграничение прав доступа. Страницу авторизации.
+## Credits
 
-Роли:
+-    [Katerina Limpitsouni (undraw.co)](https://undraw.co/) for the survey illustration
 
-Студент
-Менеджер
-Администратор
-1. После авторизации имеет доступ к персональной страничке, на которой содержится информация о его учебной группе, списке предметов, которые он прошел в течение семестра.
+## License
 
-Имеет доступ к прохождению анкетирования.
-
-Проходит опрос, связанный с предметами и преподавателями, которые были у него в течение последнего семестра.
-
-Оценивает качество лекций, семинаров, преподавания, актуальность предмета по 5-и бальной шкале. Может выразить общее мнение о предмете в поле текстовый ответ.
-
-2. Имеет доступ к редактированию опросов, составлению их, результатам прохождения студентами.
-
-3. Имеет доступ к полному функционалу приложения. (Может редактировать преподавателей, предметы, учебные группы) Выдает доступ к личному кабинету пользователей.
+-    [MIT License](https://github.com/serhatyuna/survey-app/blob/master/LICENSE)
