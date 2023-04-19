@@ -99,10 +99,6 @@ requirements:
 
 ---
 
-## Credits
-
--    [Katerina Limpitsouni (undraw.co)](https://undraw.co/) for the survey illustration
-
 ## License
 
 -    [MIT License](https://github.com/serhatyuna/survey-app/blob/master/LICENSE)
