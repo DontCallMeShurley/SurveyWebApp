@@ -1,0 +1,94 @@
+﻿@using DevExtreme.AspNet.Mvc
+<h2>Преподаватели</h2>
+@(Html.DevExtreme().DataGrid<Survey_app.Models.Lecturers>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("LecturersApi")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("Id")
+    )
+    .RemoteOperations(true)
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.SecondName);
+        columns.AddFor(m => m.FirstName);
+        columns.AddFor(m => m.LastName);
+        columns.AddFor(m => m.DateOfBirth);
+        columns.AddFor(m => m.Email);
+        columns.AddFor(m => m.LecturersPostId).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("LecturersApi").LoadAction("Lecturers_postsLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+    })
+    .Editing(e => e.Mode(GridEditMode.Popup)
+        .AllowUpdating(true)
+        .AllowAdding(true)
+        .AllowDeleting(true)
+        .UseIcons(true)
+        .Popup(p => p
+            .Title("Информация о преподавателе")
+            .ShowTitle(true)
+            .Width(700)
+            .Height(525)
+        )
+        .Form(f => f.Items(items => {
+                                        items.AddGroup()
+                                            .ColCount(2)
+                                            .ColSpan(2)
+                                            .Items(groupItems => {
+                                                                     groupItems.AddSimpleFor(m => m.SecondName);
+                                                                     groupItems.AddSimpleFor(m => m.FirstName);
+                                                                     groupItems.AddSimpleFor(m => m.LastName);
+                                                                     groupItems.AddSimpleFor(m => m.DateOfBirth);
+                                                                   
+                                            });
+        }))
+        )
+    )
+@using(Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultiple")) {
+    @(Html.DevExtreme().DataGrid()
+        .ID("embedded-datagrid")
+        .DataSource(new JS(@"component.getDataSource()"))
+        .Columns(columns => {
+                                columns.Add().DataField("Title").Caption("Наименование предмета"); 
+        })
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .FilterRow(f => f.Visible(true))
+        .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+        .Height(345)
+        .Selection(s => s.Mode(SelectionMode.Multiple))
+        .SelectedRowKeys(new JS(@"component.option(""value"")"))
+        .OnSelectionChanged(@<text>
+                                function(selectedItems) {
+                                var keys = selectedItems.selectedRowKeys;
+                                component.option("value", keys);
+                                }
+                             </text>)
+        )
+}
+<script>
+function gridBox_valueChanged(e) {
+        var $dataGrid = $("#embedded-datagrid");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+    }
+function setSubjectIds(e) {
+       var selectedItems = e.value;
+      const resultArray = [];
+      for (let i = 0; i < selectedItems.length; i++) {
+          resultArray.push({
+            SubjectId: selectedItems[i],
+            LecturersId: 1,
+          });
+        }
+        console.log(resultArray);
+       $("input[name='Subjects']").val(JSON.stringify(resultArray));
+   }
+</script>

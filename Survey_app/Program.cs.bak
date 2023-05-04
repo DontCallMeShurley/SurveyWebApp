@@ -1,0 +1,52 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Survey_app.Data;
+using Survey_app.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<SurveyRepository>();
+builder.Services.AddScoped<Subjects_lecturersRepository>();
+builder.Services.AddScoped<LecturersRepository>();
+builder.Services.AddScoped<Lecturers_postRepository> ();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); 
+});
+
+
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(option => {
+        option.LoginPath = "/Access/Login";
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+
+    });
+var app = builder.Build();
+
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+}
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Access}/{action=Login}/{id?}");
+
+app.Run();

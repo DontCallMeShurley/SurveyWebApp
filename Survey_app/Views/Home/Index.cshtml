@@ -1,0 +1,100 @@
+﻿@model Person
+@{Students student = ViewBag.Student;}
+@{
+    ViewData["Title"] = "Начало";
+}
+<div class="row">
+    <div class="col-md-4">
+        <div class="profile-img">
+            <img src="@(Model.SexType == Survey_app.Data.Enum.SexType.Male ? "https://soulsofworld.ru/uploads/profile.png"  : "https://soulsofworld.ru/uploads/woman.png") " alt="" width="150" height="150" />
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="profile-head">
+            <h5>
+                @Model.Fio
+            </h5>
+            <h6>
+                @Model.RolesTypes.ToString()
+            </h6>
+     
+            <p class="proile-rating">@Html.DisplayFor(model => model.SexType, new { htmlAttributes = new { @class = "text-muted" } })</p>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Информация</a>
+                </li>
+             @*   @if (student != null)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link active" id="subjects-tab" data-toggle="tab" href="#subjects" role="tab" aria-controls="subjects" aria-selected="true">Предметы</a>
+                    </li>
+                }*@
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-md-4">
+        <div class="profile-work">
+            <p>Контактная информация</p>
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <p>@Html.DisplayNameFor(model => model.Email): @Html.DisplayFor(model => model.Email, new { htmlAttributes = new { @class = "text-muted" } })</p>
+            }
+            <p>@Html.DisplayNameFor(model => model.Login): @Html.DisplayFor(model => model.Login, new { htmlAttributes = new { @class = "text-muted" } })</p>
+            @if (student != null && student.StudentsGroups != null)
+            {
+                <p>Учебная группа: @Html.DisplayFor(s => student.StudentsGroups.Title, new { htmlAttributes = new { @class = "text-muted" } })</p>
+                <div class="dx-field">
+                    <div class="dx-field-label">Учебные предметы</div>
+                    <div class="dx-field-value">
+                        @(Html.DevExtreme().TagBox()
+                            .Items(ViewBag.Subjects)
+                            .Value(ViewBag.Subjects)
+                            .Disabled(true)
+                            )
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="tab-content profile-tab" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.DisplayNameFor(model => model.SecondName):
+                    </div>
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.SecondName, new { htmlAttributes = new { @class = "text-muted" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.DisplayNameFor(model => model.FirstName):
+                    </div>
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.FirstName, new { htmlAttributes = new { @class = "text-muted" } })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.DisplayNameFor(model => model.LastName):
+                    </div>
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.LastName, new { htmlAttributes = new { @class = "text-muted" } })
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-6">
+                        Количество пройденных опросов:
+                    </div>
+                    <div class="col-md-6">
+                        @ViewBag.CountSurveys
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

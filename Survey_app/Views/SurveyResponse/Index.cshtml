@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Survey_app.Data.Enum
+@model Survey_app.ViewModels.UserViewSurveyResponseVM
+
+@{
+    ViewData["Title"] = "Ответы на вопросы";
+    var prevDisabled = !Model.Responses.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Responses.HasNextPage ? "disabled" : "";
+
+    int next = Model.Responses.PageIndex + 1;
+    int prev = Model.Responses.PageIndex - 1;
+}
+
+<header class="d-flex align-items-center justify-content-between bg-white p-3 shadow rounded mt-5">
+    <div class="d-flex gap-4 align-items-center">
+        <img style="width: 100px;" src="~/img/logo2.svg" />
+        <h3 class="text-dark">@Model.Survey.Title</h3>
+    </div>
+    <div class="w-50">
+        <form id="searchForm" role="search">
+            <input class="form-control form-control-lg search-bar" onkeypress="handleSearch(event)" name="searchString" value="@ViewData["Search"]" type="text" placeholder="Поиск">
+        </form>
+    </div>
+</header>
+
+<div class="bg-white shadow rounded mt-3 p-1">
+    <table class="table w-100 ">
+        <thead>
+            <tr>
+
+                @{
+                    if (Model.Survey.Questions != null)
+                        foreach (var question in Model.Survey.Questions)
+                        {
+                            <th>@question.Text</th>
+                        }
+                }
+                <th>Пользователь</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var response in Model.Responses)
+            {
+                int i = 0, j = 0;
+
+                <tr>
+                    @foreach (var question in Model.Survey.Questions)
+                    {
+                        if (question.QuestionTypes.Equals(QuestionTypes.Checkbox))
+                        {
+                            if (i < response.MultiAnswers.Count)
+                            {
+                                <td>
+                                    @string.Join(", ", response.MultiAnswers[i].Values
+                    .Select(val => val.Value))
+                                </td>
+                                i++;
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        }
+                        else
+                        {
+                            <td>@response.Answers[j].Text</td>
+                            j++;
+                        }
+                    }
+                    <td style="color: blue;">@response.Person.Fio</td>
+                </tr>
+           
+            }
+
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class="page-item @prevDisabled"><a class="page-link" asp-action="Index" asp-route-id="@Model.Survey.Id" asp-route-searchString="@ViewData["Search"]" asp-route-pageNumber="@prev">Previous</a></li>
+            @for (int pageNum = 1; pageNum <= Model.Responses.TotalPages; pageNum++)
+            {
+                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-id="@Model.Survey.Id" asp-route-searchString="@ViewData["Search"]" asp-route-pageNumber="@pageNum">@pageNum</a></li>
+            }
+            <li class="page-item @nextDisabled"><a class="page-link" asp-action="Index" asp-route-id="@Model.Survey.Id" asp-route-searchString="@ViewData["Search"]" asp-route-pageNumber="@next">Next</a></li>
+        </ul>
+    </nav>
+</div>
+
+@section Scripts{
+    <script>
+        function handleSearch(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                document.getElementById('searchForm').submit();
+            }
+        }
+    </script>
+}

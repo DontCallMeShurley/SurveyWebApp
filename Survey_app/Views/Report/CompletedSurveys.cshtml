@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Пройденные опросы";
+}
+@(Html.DevExtreme().DataGrid()
+    .ID("gridContainer")
+    .DataSource(d => d.Mvc()
+        .Controller("ReportApi")
+        .LoadAction("GetCompletedSurveys")
+    )
+    .FilterRow(x=>x.Visible(true))
+    .Export(x=>x.Enabled(true))
+    .ShowBorders(true)
+    )

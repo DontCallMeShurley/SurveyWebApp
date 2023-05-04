@@ -1,0 +1,37 @@
+﻿@using Survey_app.Data.Enum;
+@using Survey_app.ViewModels
+@model List<Survey_app.Dtos.ReportDto>
+@{
+    int k = 0;
+    foreach (var item in @Model)
+    {
+        @(Html.DevExtreme().PieChart()
+            .ID("pie" + k)
+            .Type(PieChartType.Donut)
+            .Palette(VizPalette.SoftPastel)
+            .Title(item.Questions.Text)
+            .Legend(l => l
+                .HorizontalAlignment(HorizontalAlignment.Right)
+                .VerticalAlignment(VerticalEdge.Top)
+                .Margin(0)
+            )
+            .Export(e => e.Enabled(true))
+            .Series(s => s
+                .Add()
+                .ArgumentField("NameAnswer")
+                .ValueField("CountAnswers")
+                .HoverStyle(h => h.Color("#ffd700"))
+                .Label(l =>l
+                                                    .Visible(true)
+                                                    .Connector(c => c.Visible(true)))
+            )
+            .OnPointClick(@<text>
+                              function(arg) {
+                              arg.target.select();
+                              }
+                           </text>)
+            .DataSource(item.AnswersReports)
+            )
+        k++;
+    }
+}

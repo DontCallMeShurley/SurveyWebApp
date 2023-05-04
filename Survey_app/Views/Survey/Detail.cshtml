@@ -1,0 +1,102 @@
+﻿@using Survey_app.ViewModels
+@model IndexSurveyViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h5>Информация об опросе</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Название</h6>
+                    <p>@Model.Title</p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Описание</h6>
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Дата начала</h6>
+                    <p>@Model.StartDate</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Дата окончания</h6>
+                    <p>@Model.EndDate</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Статус</h6>
+                    <p>@Model.SurveyStatus</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Предмет</h6>
+                    <p>@Model.SubjectsLecturers.Lecturers.FirstName @Model.SubjectsLecturers.Lecturers.SecondName - @Model.SubjectsLecturers.Subject.Title</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @foreach (var item in Model.SurveyQuestion)
+    {
+        <div class="card" style="width: 18rem;">
+            <ul class="list-group list-group-flush">
+             @*   <li class="list-group-item">@item.Questions.Text</li>*@
+            </ul>
+        </div>
+    }
+     <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Create Survey</button>
+</div>
+
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Create Survey</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="numberOfQuestions">Number of questions: </label>
+                        <input type="number" max="15" min="1" value="2" id="numberOfQuestions" class="form-control" placeholder="10">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="numberOfOptions">Number of options: </label>
+                        <input type="number" max="10" min="2" value="5" id="numberOfOptions" class="form-control" placeholder="5">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary create-button">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
+    <script>
+        $('.create-button').on('click', function () {
+            var questions = $('#numberOfQuestions').val();
+            var options = $('#numberOfOptions').val();
+            var url = "/survey/create?NumberOfQuestions=" + questions + "&NumberOfOptions=" + options;
+            window.location.href = url;
+        });
+    </script>
+}

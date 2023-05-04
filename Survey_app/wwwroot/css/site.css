@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600");
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Montserrat";
+    background: rgb(244, 253, 253);
+    margin: 0;
+}
+
+.hero {
+    width: 70%;
+    margin-left: 10%;
+}
+
+.container-mt {
+    margin-top: 10%;
+}
+
+.purple-btn {
+    background-color: rgb(35, 163, 169);
+    color: rgb(255, 251, 251);
+}
+
+    .purple-btn:hover {
+        background-color: rgb(13, 139, 146);
+        color: #fff;
+    }
+
+.violet-btn {
+    background-color: #af6eeb;
+    color: rgb(255, 251, 251);
+}
+
+    .violet-btn:hover {
+        background-color: #7d1dd6;
+        color: #fff;
+    }
+
+.input-border {
+    border: 0 !important;
+    border-width: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    transition: border 0.4s ease-in-out;
+}
+
+    .input-border:hover {
+        border-bottom: 1px solid lightgray !important;
+    }
+
+    .input-border:focus {
+        border-bottom: 2px solid blueviolet !important;
+    }
+
+.search-bar {
+    border-width: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid lightgray !important;
+    transition: border 0.4s ease-in-out;
+}
+
+    .search-bar:focus {
+        border-bottom: 2px solid blueviolet !important;
+    }

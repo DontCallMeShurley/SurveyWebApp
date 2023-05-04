@@ -1,0 +1,37 @@
+﻿@using Survey_app.Data.Enum
+@{
+    ViewData["Title"] = "Возможные вопросы";
+}
+
+<h2>Возможные вопросы</h2>
+
+@(Html.DevExtreme().DataGrid<Survey_app.Models.Questions>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("QuestionsApi")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("Id")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.Text);
+        columns.AddFor(m => m.QuestionTypes).Lookup(lookup => lookup
+        .DataSource(d => d.Mvc().Controller("QuestionsApi").LoadAction("GetTypes").Key("Id"))
+        .DisplayExpr("Name")
+        .ValueExpr("Id"));
+    })
+    .SearchPanel(searchPanel => searchPanel
+        .Visible(true)
+        .Width(240)
+        .Placeholder("Поиск...")
+    )
+    .Editing(e => e
+        .AllowAdding(true)
+        .AllowUpdating(true)
+        .AllowDeleting(true)
+        .UseIcons(true)
+    )
+)

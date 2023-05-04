@@ -1,0 +1,9 @@
+﻿@model Survey_app.ViewModels.SurveyResponseVM
+@{
+    ViewData["Title"] = "Спасибо!";
+}
+<div class="container mt-5 text-center">
+    <i class="fas fa-check-circle fa-5x survey-icon"></i>
+    <h3 class="survey-title">Спасибо за прохождение опроса <b>@Model.Survey.Title.</b></h3>
+    <a  asp-action="Index" asp-controller="Survey" asp-area="" class="btn btn-outline-success btn-sm">Вернуться назад</a>
+</div>

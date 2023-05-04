@@ -1,0 +1,11 @@
+﻿@using Survey_app.ViewModels;
+@model QuestionTypeViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<input type="hidden" name="Survey_Id" value="@Model.SurveyId" />
+@foreach (var qt in Model.Type) {
+    <a href="@Url.Action("CreateQuestion","Questions",new {Survey_Id = Model.SurveyId})">@qt</a>
+}

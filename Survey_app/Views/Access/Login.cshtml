@@ -1,0 +1,105 @@
+﻿@model Survey_app.Models.VmLogin;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .login-form {
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            margin: auto;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+            .login-form h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .login-form input[type="email"],
+            .login-form input[type="password"] {
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                box-sizing: border-box;
+                display: block;
+                font-size: 16px;
+                margin: 0 auto 10px auto;
+                padding: 10px;
+                width: 100%;
+            }
+
+            .login-form label {
+                display: inline-block;
+                font-size: 14px;
+                margin-bottom: 10px;
+                text-align: left;
+                width: 100%;
+            }
+
+            .login-form button[type="submit"] {
+                background-color: #2e6da4;
+                border: none;
+                border-radius: 4px;
+                color: #fff;
+                cursor: pointer;
+                display: block;
+                font-size: 16px;
+                margin: 20px auto 0 auto;
+                padding: 10px 20px;
+            }
+
+                .login-form button[type="submit"]:hover {
+                    background-color: #1f4f79;
+                }
+
+            .login-form .error-message {
+                color: red;
+                font-size: 14px;
+                margin-top: 10px;
+                text-align: left;
+            }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h1>Вход в систему</h1>
+        <form asp-controller="Access" asp-action="Login" method="post">
+            <label for="Email">Электронная почта</label>
+            <input type="email" id="Email" name="Email" placeholder="Электронная почта" asp-for="Email" required/>
+
+            <label for="Password">Пароль</label>
+            <input type="password" id="Password" name="Password" placeholder="Пароль" asp-for="Password"  required/>
+
+            <label>
+                <input type="checkbox" asp-for="KeepLoggedIn" />
+               Оставаться в сети
+            </label>
+            <i>Тестовые данные для входа - lord1of2ultima@gmail.com : 123</i>
+            <button type="submit">Войти</button>
+
+            
+            <div class="error-message">@ViewData["ValidateMessage"]</div>
+
+        </form>
+    </div>
+</body>
+</html>

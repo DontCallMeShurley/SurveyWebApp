@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Учебные группы";
+}
+
+<h2>Учебные группы</h2>
+
+@(Html.DevExtreme().DataGrid<Survey_app.Models.StudentsGroups>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("StudentsGroupsApi")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("Id")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.Title);
+
+        columns.AddFor(m => m.CreationDate);
+        /*
+        columns.AddFor(m => m.UniversityCampusId).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("StudentsGroupsApi").LoadAction("UniversityCampusesLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );*/
+    })
+    .Editing(e => e
+        .AllowAdding(true)
+        .AllowUpdating(true)
+        .AllowDeleting(true)
+        .UseIcons(true)
+    )
+)

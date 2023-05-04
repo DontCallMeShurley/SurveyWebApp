@@ -1,0 +1,95 @@
+﻿@using Survey_app.Data.Enum
+@model Survey_app.ViewModels.SurveyViewModel
+
+@{
+    ViewData["Title"] = "Редактировать опрос";
+}
+
+<div class="d-flex position-fixed end-0" style="margin-right: 18%">
+    <div class="d-flex flex-column shadow-sm form-control border-0" aria-orientation="vertical">
+        <button type="button" class="btn btn-sm btn-success mb-2" id="addQuestion" data-bs-toggle="tooltip" data-bs-placement="right" title="Добавить вопрос"><i class="bi bi-plus"></i></button>
+        <button type="submit" id="surveybtn" class="btn btn-sm btn-primary mb-2" form="survey-form" data-bs-toggle="tooltip" data-bs-placement="right" title="Сохранить"><i class="bi bi-save"></i></button>
+    </div>
+</div>
+
+
+<form id="survey-form" class="form-control shadow-sm border-0 row g-3 mx-auto pb-4" style="width: 60%" asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-12 mb-3">
+        <input class="form-control form-control-lg input-border" type="text" asp-for=Title placeholder="Название  опроса">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="col-12 mb-3">
+        <input class="form-control form-control input-border" type="text" asp-for=Description placeholder="Описание опроса">
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="col-12 mb-3">
+        <select class="choices form-select" asp-for="SubjectsLecturersId" asp-items="@Model.SubjectsLecturersList" title="Преподаватель">
+        </select>
+    </div>
+    @for (int i = 0; i < Model.Questions?.Count; i++)
+    {
+        <input type="number" asp-for=Questions[i].Id hidden />
+        <div class="input-wrap row g-3">
+            <div class="col-md-7 question-container">
+                <input type="text" asp-for=Questions[i].Text class="form-control question input-border" placeholder="Вопрос">
+            </div>
+            <div class="col-md-4">
+                <select class="choices form-select" asp-for="Questions[i].QuestionTypes" asp-items="new SelectList(Enum.GetValues(typeof(QuestionTypes)), Model.Questions[i].QuestionTypes)">
+                </select>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-sm btn-danger remove-question" data-bs-toggle="tooltip" data-bs-placement="right" title="Удалить вопрос"><i class="bi bi-trash3-fill"></i></button>
+            </div>
+
+            @if (Model.Questions[i].QuestionTypes.Equals(QuestionTypes.Text))
+            {
+                <span px-3>Answer text</span>
+            }
+            else
+            {
+                @for (int j = 0; j < Model.Questions[i].QuestionsOptions.Count; j++)
+                {
+                    <input type="number" asp-for="Questions[i].QuestionsOptions[j].Id" hidden />
+                    <div class="row g-3 question-type">
+                        <div class="qtype col-md-1 d-flex justify-content-center align-items-center">
+                            <input class="form-check-input" type="@Enum.GetName(Model.Questions[i].QuestionTypes).ToLower()" disabled>
+                        </div>
+                        <div class="col-md-6 options">
+                            <input class="rd form-control input-border option" asp-for=Questions[i].QuestionsOptions[j].Text type="text" placeholder="Вариант ответа" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="remove btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Удалить вариант">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </div>
+                        @if (j == 0)
+                        {
+                            <div class="col-md-2">
+                                <button type="button" class="add btn btn-sm violet-btn" data-bs-toggle="tooltip" data-bs-placement="right" title="Добавить вариант"><i class="bi bi-plus"></i></button>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    }
+</form>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+
+        <div class="toast-body bg-success text-light">
+            Успешно сохранено
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/survey.js"></script>
+}

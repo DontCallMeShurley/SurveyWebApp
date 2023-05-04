@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Пользователи";
+}
+@using DevExtreme.AspNet.Mvc
+<div id="data-grid-demo">
+    @(Html.DevExtreme().DataGrid<Person>()
+        .ID("gridContainer")
+        .ShowBorders(true)
+        .Paging(p => p.Enabled(false))
+        .Editing(e => e.Mode(GridEditMode.Popup)
+        .AllowUpdating(true)
+        .AllowAdding(true)
+        .AllowDeleting(true)
+            .UseIcons(true)
+        .Popup(p => p
+        .Title("Информация о пользователе")
+        .ShowTitle(true)
+        .Width(700)
+        .Height(525)
+        )
+        .Form(f => f.Items(items =>
+        {
+            items.AddGroup()
+            .ColCount(2)
+            .ColSpan(2)
+            .Items(groupItems =>
+            {
+                groupItems.AddSimpleFor(m => m.SecondName);
+                groupItems.AddSimpleFor(m => m.FirstName);
+                groupItems.AddSimpleFor(m => m.LastName);
+                groupItems.AddSimpleFor(m => m.SexType);
+                groupItems.AddSimpleFor(m => m.Email) .ColSpan(2);
+                groupItems.AddSimpleFor(m => m.RolesTypes) .ColSpan(2);;
+
+            });
+        }))
+        )
+        .Columns(columns =>
+        {
+            columns.AddFor(m => m.LastName);
+            columns.AddFor(m => m.FirstName);
+            columns.AddFor(m => m.SecondName);
+            columns.AddFor(m => m.Email);
+            columns.AddFor(m => m.RolesTypes)
+            .Width(125)
+            .Lookup(lookup => lookup
+            .DataSource(d => d.Mvc().Controller("PersonApi").LoadAction("GetRolesName").Key("Id"))
+            .DisplayExpr("Name")
+            .ValueExpr("Id")
+            );
+        })
+
+        .HeaderFilter(headerFilter => headerFilter.Visible(true))
+        .SearchPanel(searchPanel => searchPanel
+            .Visible(true)
+            .Width(240)
+            .Placeholder("Поиск...")
+            )
+       
+        .DataSource(d => d.Mvc()
+            
+
+        .Controller("PersonApi")
+        .LoadAction("GetList")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("Id")
+        )
+        )
+</div>

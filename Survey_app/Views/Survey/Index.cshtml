@@ -1,0 +1,69 @@
+﻿@using Survey_app.Data.Enum;
+@using Survey_app.ViewModels
+@model IEnumerable<IndexSurveyViewModel>
+
+@{
+    ViewData["Title"] = "Начало";
+    string userRole = "";
+
+    foreach (var role in (RolesTypes[])Enum.GetValues(typeof(RolesTypes)))
+    {
+        var nameRole = Enum.GetName(role);
+        if (nameRole == null)
+            continue;
+
+        if (Context.User.IsInRole(nameRole))
+        {
+            userRole = nameRole;
+            break;
+        }
+    }
+}
+
+<div class="panel panel-default todo-panel">
+    <div class="panel-heading mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0" style="font-size: 1.5rem">Опросы</h3>
+            @if (userRole == "Admin"){
+            <a type="btn bnt-success" asp-action="Create" class="btn btn-success"> <span>Добавить</span></a>
+            }
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td>Название</td>
+                <td>Описание</td>
+                <td>Дата начала</td>
+                <td>Дата окончания</td>
+                <td>Статус</td>
+                <td>Предмет</td>
+                <td>Количество вопросов</td>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>@item.StartDate</td>
+                    <td>@item.EndDate</td>
+                    <td>@item.SurveyStatus</td>
+                    <td>@item.SubjectsLecturers.Lecturers.FirstName @item.SubjectsLecturers.Lecturers.SecondName - @item.SubjectsLecturers.Subject.Title</td>
+                    <td>@item.SurveyQuestion?.Count()</td>
+                    <td @(userRole != "Admin" ? "hidden" : "")>
+                        <a asp-route-Id="@item.Id" asp-action="Edit" asp-controller="Survey" asp-area="" class="btn btn-outline-info btn-sm" title="Редактировать"><i class="fas fa-edit"></i></a>
+                        <a asp-route-Id="@item.Id" asp-action="Delete" asp-controller="Survey" asp-area="" class="btn btn-outline-danger btn-sm" title="Удалить"><i class="fas fa-trash"></i></a>
+                        <a asp-route-Id="@item.Id" asp-action="Index" asp-controller="SurveyResponse" asp-area="" class="btn btn-outline-primary btn-sm" title="Результаты"><i class="fas fa-search"></i></a>
+                        <a asp-route-Id="@item.Id" asp-action="Charts" asp-controller="Report" asp-area="" class="btn btn-outline-success btn-sm" title="Диаграмма ответов"><i class="fas fa-pie-chart"></i></a>
+                    </td>
+                    <td>
+                        <a asp-route-Id="@item.Id" asp-action="Respond" asp-controller="SurveyResponse" asp-area="" class="btn btn-outline-warning btn-sm" title="Пройти опрос"><i class="fas fa-poll"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

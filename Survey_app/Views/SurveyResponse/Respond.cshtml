@@ -1,0 +1,102 @@
+﻿@using Survey_app.Data.Enum
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Survey_app.ViewModels.CreateSurveyResponseVM
+
+@{
+    ViewData["Title"] = "Опрос";
+
+    int AnswerIndex = 0;
+    int MultAnswerIndex = 0;
+}
+
+<div class="container mt-5">
+    <form id="survey-form" class="form-control shadow border-0 row g-3 mx-auto py-4" style="width: 70%" asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="text" class="form-control" value="@Model.Survey.Id" asp-for="@Model.Survey.Id" hidden/>
+        <input type="text" class="form-control" value="@Model.Survey.Title" asp-for="@Model.Survey.Title" hidden/>
+        <input type="text" class="form-control" value="@Model.Survey.Questions" asp-for="@Model.Survey.Questions" hidden />
+        <div class="row justify-content-end">
+            <div class="col-8 mb-5">
+                <h1 class="text-center">@Model.Survey.Title</h1>
+            </div>
+            <div class="col-2 mb-5">
+                <img style="width: 100px;" src="~/img/logo2.svg" />
+            </div>
+        </div>
+        @for (int i = 0; i < Model.Survey.Questions.Count; i++)
+        {
+            <div class="row g-3 ps-5 mb-2">
+                <div class="col">
+                    <h4>@Model.Survey.Questions[i].Text</h4>
+                </div>
+                <input type="hidden" class="form-control" asp-for="Response.Answers[AnswerIndex].QuestionId" required value="@Model.Survey.Questions[i].Id"/>
+                @if (Model.Survey.Questions[i].QuestionTypes.Equals(QuestionTypes.Text))
+                {
+                    <div class="mb-3">
+                        <input type="text" class="form-control" asp-for="Response.Answers[AnswerIndex].Text" required />
+                        <span asp-validation-for="Response.Answers[AnswerIndex].Text" class="text-danger"></span> </div>                                                            
+                    AnswerIndex++;
+                }
+                else if (Model.Survey.Questions[i].QuestionTypes.Equals(QuestionTypes.Radio))
+                {
+                    @foreach (var option in Model.Survey.Questions[i].QuestionsOptions)
+                    {
+                        <div class="form-check ps-5">
+                            <label class="form-check-label">@option.Text</label>
+                            <input class="form-check-input" type="radio" value="@option.Text" asp-for="Response.Answers[AnswerIndex].Text" required>
+                            <span asp-validation-for="Response.Answers[AnswerIndex].Text" class="text-danger"></span>
+                        </div>
+                    }
+                    AnswerIndex++;
+                }
+                else
+                {
+                    @for (int j = 0; j < Model.Survey.Questions[i].QuestionsOptions.Count; j++)
+                    {
+                        <input type="hidden"  value="@Model.Survey.Questions[i].Id" asp-for="Response.MultiAnswers[MultAnswerIndex].QuestionId"  />
+                        <div class="form-check ps-5">
+                            <label class="form-check-label">@Model.Survey.Questions[i].QuestionsOptions[j].Text</label>
+                            <input class="form-check-input checkboxes" type="checkbox" value="@Model.Survey.Questions[i].QuestionsOptions[j].Text" asp-for="Response.MultiAnswers[MultAnswerIndex].Values[j].Value" required />
+                            <span asp-validation-for="Response.MultiAnswers[MultAnswerIndex].Values[j].Value" class="text-danger"></span>
+                        </div>
+                    }
+                    MultAnswerIndex++;
+                }
+            </div>
+        }
+        <div class="d-grid gap-2 col-4 mx-auto my-4 mt-5">
+            <button class="btn btn-success" form="survey-form" id="respond-btn" type="submit">Отправить</button>
+        </div>
+    </form>
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body bg-success text-light">
+                Sent successfully
+            </div>
+        </div>
+        <div id="warningToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-body bg-primary text-light">
+                Please answer all questions
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            let checkboxes = $('.checkboxes');
+            checkboxes.change(function () {
+                if ($('.checkboxes:checked').length > 0) {
+                    checkboxes.removeAttr('required');
+                } else {
+                    checkboxes.attr('required', 'required');
+                }
+            });
+        });
+    </script>
+}

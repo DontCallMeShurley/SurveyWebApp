@@ -1,0 +1,113 @@
+﻿@using Survey_app.Data.Enum;
+@{
+    var userContextIdentity = Context.User.Identity;
+    if (userContextIdentity == null)
+        return;
+    string userRole = "";
+
+    foreach (var role in (RolesTypes[])Enum.GetValues(typeof(RolesTypes)))
+    {
+        var nameRole = Enum.GetName(role);
+        if (nameRole == null)
+            continue;
+
+        if (Context.User.IsInRole(nameRole))
+        {
+            userRole = nameRole;
+            break;
+        }
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Survey_app</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.4.0/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.1.1/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.0.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.9/jspdf.plugin.autotable.min.js"></script>
+    <link href="~/css/devextreme/dx.light.css" rel="stylesheet" />
+    <script src="~/js/devextreme/jquery.js"></script>
+    <script src="~/js/devextreme/dx.all.js"></script>
+    <script src="~/js/devextreme/aspnet/dx.aspnet.mvc.js"></script>
+    <script src="~/js/devextreme/aspnet/dx.aspnet.data.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/3df9444896.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Портал опросов</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse justify-content-end d-sm-inline-flex">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Survey" asp-action="Index">Опросы</a>
+                        </li>
+
+                        <li class="nav-item dropdown @(userRole != "Admin" ? "visually-hidden" : "")">
+                            <a class="nav-link text-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                                Администрирование
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" asp-area="" asp-controller="Lectures" asp-action="List">Преподаватели</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Subject" asp-action="List">Предметы</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="SubjectLectures" asp-action="List">Введение дисциплин</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Report" asp-action="Index">Отчётики (UwU)</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Exceptions" asp-action="ListSubjects">Критерии оценки предметов</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Exceptions" asp-action="ListLectures">Критерии оценки преподавателей</a>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <form class="form-inline my-2 my-lg-0">
+                        Добро пожаловать, @userRole!
+                    </form>
+
+                    <div class="dropdown @(userRole != "Admin" ? "hidden" : "")">
+                        <a class="nav-link text-dark dropdown-toggle" @(userRole != "Admin" ? "hidden" : "") href="#" role="button" id="dropdownMenuLinkUsers" data-bs-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            Пользователи
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLinkUsers">
+                            <a class="dropdown-item" asp-area="" asp-controller="Person" asp-action="List">Список пользователей</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="StudentsGroups" asp-action="List">Учебные группы</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Students" asp-action="List">Студенты</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="SubjectStudent" asp-action="List">Предметы для учебных групп</a>
+                        </div>
+                    </div>
+
+                    <form class="form-inline my-2 my-lg-0">
+                        <span><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="LogOut"><b>Выход</b></a></span>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - develop by me ^_^
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
